@@ -1,3 +1,4 @@
+import 'package:flutter_samples/core/feature/restulApi/core/base/base_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'home_model.g.dart';
@@ -25,7 +26,7 @@ class Model {
 }
 
 @JsonSerializable()
-class User {
+class User extends IBaseModel<User> {
   @JsonKey(name: 'id')
   final int? userId;
   @JsonKey(name: 'email')
@@ -41,5 +42,11 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  @override
+  User fromJson(Map<String, dynamic> json) {
+    return User.fromJson(json);
+  }
 }

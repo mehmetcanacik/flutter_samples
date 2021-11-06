@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_samples/core/feature/restulApi/core/base/base_widget.dart';
+
+import '../../core/base/base_widget.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
