@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import '../../../core/base/base_model.dart';
+import '../../../core/base/i_base_model.dart';
 
 part 'home_model.g.dart';
 

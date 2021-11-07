@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_samples/core/feature/restulApi/view/home/widget/info/user_info.dart';
 import 'package:provider/provider.dart';
 import '../../core/base/base_widget.dart';
 import '../../core/service/i_service.dart';
@@ -39,6 +43,23 @@ class _HomeViewState extends DraftPage<HomeView> {
       floatingActionButton: FloatingActionButton(
         onPressed: viewModel.fetchUsers,
       ),
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+              onPressed: () async {
+                var response = await Navigator.push<bool>(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const UserInfoView(),
+                  ),
+                );
+                if (response != null) {
+                  debugPrint("Gelen cevap: $response");
+                }
+              },
+              icon: const Icon(Icons.cached))
+        ],
+      ),
       body: SizedBox(
         height: pageHeight,
         width: pageWidth,
@@ -66,8 +87,21 @@ class _HomeViewState extends DraftPage<HomeView> {
       scrollDirection: Axis.vertical,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return UserCard(
-          user: viewModel.users[index],
+        var user = viewModel.users[index];
+        return ListTile(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+          title: Text(user.fName ?? ""),
+          subtitle: Text(user.userMail ?? ""),
+          leading: CircleAvatar(
+            radius: 30.0,
+            backgroundImage: NetworkImage(user.avatarUrl ?? ""),
+          ),
+          trailing: IconButton(
+              icon: const Icon(Icons.bookmark_add, color: Colors.grey),
+              onPressed: () async {
+                await viewModel.addCache(user);
+              }),
         );
       },
       itemCount: viewModel.users.length);

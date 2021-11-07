@@ -2,23 +2,42 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
+import '../../core/base/i_base_view_model.dart';
+import '../../core/init/cache_manager/cache_manager.dart';
 import '../../core/service/i_service.dart';
 import 'model/home_model.dart';
 
-class HomeViewModel with ChangeNotifier {
+class HomeViewModel with ChangeNotifier, IBaseViewModel {
   bool isLoading;
   final IService<User> service;
-  late List<User> _users;
+  List<User> _users = <User>[];
   HomeViewModel({required this.service, required this.isLoading}) {
-    _users = <User>[];
-   
+    notifyListeners();
   }
 
   List<User> get users => _users;
+  // List<User> get cachedUsers => _cachedUsers;
   setLoading(bool value) {
     isLoading = value;
-    log("setLoading : $isLoading");
     notifyListeners();
+  }
+
+  Future addCache(User user) async {
+    await CacheManager()
+        .addItemToCache<User>(eId: user.userId.toString(), model: user);
+    notifyListeners();
+  }
+
+  User? getItem(User user) {
+    return CacheManager().getItemFromCache<User>(eId: user.userId.toString());
+  }
+
+  Future removeItem(User user) async {
+    await CacheManager().removeItem<User>(eId: user.userId.toString());
+  }
+
+  List<User> allCacheData() {
+    return CacheManager().getAllItems<User>(model: User());
   }
 
   Future fetchUsers() async {
@@ -30,5 +49,14 @@ class HomeViewModel with ChangeNotifier {
       setLoading(false);
       throw Exception(e.toString());
     }
+  }
+
+  bool isCachedData(User user) {
+    return CacheManager().isCachedData<User>(user.userId.toString());
+  }
+
+  @override
+  setInit() {
+    
   }
 }

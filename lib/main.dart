@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_samples/core/feature/restulApi/core/init/cache_manager/cache_manager.dart';
 import 'core/feature/restulApi/view/home/home_view.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CacheManager().preferencesInit();
   runApp(const MyApp());
 }
 
@@ -16,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeViewProvider(),
+      home: const HomeViewProvider(),
     );
   }
 }
