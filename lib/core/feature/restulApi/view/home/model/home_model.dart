@@ -1,5 +1,5 @@
-import 'package:flutter_samples/core/feature/restulApi/core/base/base_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../../../core/base/base_model.dart';
 
 part 'home_model.g.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import '../../view/home/home_model.dart';
+import '../../view/home/model/home_model.dart';
 import '../base/base_model.dart';
 import '../constants/app_constants.dart';
 

@@ -1,8 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_samples/core/feature/restulApi/core/service/i_service.dart';
-import 'package:flutter_samples/core/feature/restulApi/view/home/home_model.dart';
+
+import '../../core/service/i_service.dart';
+import 'model/home_model.dart';
 
 class HomeViewModel with ChangeNotifier {
   bool isLoading;

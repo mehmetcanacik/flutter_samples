@@ -6,30 +6,14 @@ import '../../core/service/i_service.dart';
 import 'home_view_model.dart';
 import 'widget/loading_widget.dart';
 import 'widget/user_card.dart';
+part 'main_page.dart';
 
 class HomeViewProvider extends StatelessWidget {
   const HomeViewProvider({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ValueNotifier<bool>>(
-      create: (context) => ValueNotifier<bool>(false),
-      child: Consumer<ValueNotifier<bool>>(
-        builder: (context, ValueNotifier<bool> isLoading, _) {
-          return ChangeNotifierProvider<HomeViewModel>(
-            create: (context) => HomeViewModel(
-              isLoading: isLoading.value,
-              service: UserService(dio: Dio()),
-            ),
-            child: Consumer<HomeViewModel>(
-              builder: (context, HomeViewModel viewModel, _) => HomeView(
-                viewModel: viewModel,
-              ),
-            ),
-          );
-        },
-      ),
-    );
+    return mainPage();
   }
 }
 
@@ -66,7 +50,7 @@ class _HomeViewState extends DraftPage<HomeView> {
                 scrollDirection: Axis.vertical,
                 // primary: true,
                 child: viewModel.isLoading
-                    ?  LoadingWidget(
+                    ? LoadingWidget(
                         context: context, color: Colors.red, width: 3.0)
                     : userBuilder,
               ),
