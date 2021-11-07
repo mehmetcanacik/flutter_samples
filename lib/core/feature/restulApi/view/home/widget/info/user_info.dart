@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_samples/core/feature/restulApi/core/extensions/context_extensions.dart';
 import 'package:flutter_samples/core/feature/restulApi/core/init/cache_manager/cache_manager.dart';
 import 'package:flutter_samples/core/feature/restulApi/view/home/model/home_model.dart';
 
@@ -14,9 +17,12 @@ class _UserInfoViewState extends State<UserInfoView> {
 
   @override
   void initState() {
-    WidgetsFlutterBinding.ensureInitialized();
     super.initState();
     userList = <User>[];
+    fetchUser();
+  }
+
+  fetchUser() {
     userList = CacheManager().getAllItems(model: User());
   }
 
@@ -24,43 +30,51 @@ class _UserInfoViewState extends State<UserInfoView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(),
-        body: userList.isNotEmpty
-            ? ListView.builder(
-                itemBuilder: (context, index) {
-                  var user = userList[index];
-                  return Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            bottom:
-                                BorderSide(width: .5, color: Colors.black))),
-                    child: Dismissible(
-                      direction: DismissDirection.horizontal,
-                      key: ValueKey(user.userId),
-                      onDismissed: (state) async {
-                        await CacheManager()
-                            .removeItem(eId: user.userId.toString());
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                            radius: 30.0,
-                            backgroundImage:
-                                NetworkImage(user.avatarUrl ?? "")),
-                        title: Text(user.userMail ?? "Empty User"),
-                        trailing: IconButton(
-                            onPressed: () async {
-                              var response = await CacheManager()
-                                  .removeItem<User>(
-                                      eId: user.userId.toString());
-                              debugPrint("Gelen user :$response");
-                            },
-                            icon: const Icon(Icons.attach_file)),
-                      ),
-                    ),
-                  );
+        body: userList.isNotEmpty ? userListWidget() : noDataWidget(context));
+  }
+
+  Widget userListWidget() {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        var user = userList[index];
+        return Container(
+          padding: const EdgeInsets.all(8.0),
+          decoration: const BoxDecoration(
+              border:
+                  Border(bottom: BorderSide(width: .5, color: Colors.black))),
+          child: ListTile(
+            leading: CircleAvatar(
+                radius: 30.0,
+                backgroundImage: NetworkImage(user.avatarUrl ?? "")),
+            title: Text(user.userMail ?? "Empty User"),
+            trailing: IconButton(
+                onPressed: () async {
+                  await CacheManager()
+                      .removeItem<User>(eId: user.userId.toString());
+                  setState(() {
+                    fetchUser();
+                  });
                 },
-                itemCount: userList.length,
-              )
-            : const Text("Veri Yok!"));
+                icon: const Icon(Icons.attach_file)),
+          ),
+        );
+      },
+      itemCount: userList.length,
+    );
+  }
+
+  Widget noDataWidget(BuildContext context) {
+    return SizedBox(
+      width: context.pageWidth,
+      height: context.pageHeight,
+      child: const Center(
+        child: Text("Veri Yok!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black54)),
+      ),
+    );
   }
 }

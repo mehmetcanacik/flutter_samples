@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
@@ -16,7 +15,6 @@ class HomeViewModel with ChangeNotifier, IBaseViewModel {
   }
 
   List<User> get users => _users;
-  // List<User> get cachedUsers => _cachedUsers;
   setLoading(bool value) {
     isLoading = value;
     notifyListeners();
