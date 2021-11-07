@@ -59,14 +59,15 @@ class _HomeViewState extends DraftPage<HomeView> {
         height: pageHeight,
         width: pageWidth,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
-                primary: true,
+                // primary: true,
                 child: viewModel.isLoading
-                    ? const LoadingWidget(color: Colors.red, width: 3.0)
+                    ?  LoadingWidget(
+                        context: context, color: Colors.red, width: 3.0)
                     : userBuilder,
               ),
             ),

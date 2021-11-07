@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_samples/core/feature/restulApi/core/base/base_model.dart';
-import 'package:flutter_samples/core/feature/restulApi/core/cosntants/app_constants.dart';
-import 'package:flutter_samples/core/feature/restulApi/view/home/home_model.dart';
+import '../../view/home/home_model.dart';
+import '../base/base_model.dart';
+import '../constants/app_constants.dart';
 
 abstract class IService<T extends IBaseModel> {
   final Dio dio;

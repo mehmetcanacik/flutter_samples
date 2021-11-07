@@ -1,13 +1,15 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_samples/core/feature/restulApi/core/extensions/context_extensions.dart';
 
 class LoadingWidget extends StatelessWidget {
   final Color color;
   final double width;
+  final BuildContext context;
   const LoadingWidget({
     Key? key,
     this.color = Colors.grey,
     this.width = 1.0,
+    required this.context,
   }) : super(key: key);
 
   @override
@@ -15,6 +17,7 @@ class LoadingWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        SizedBox(height: context.pageHeight / 2, width: context.pageWidth),
         loadingText,
         progressIndicator(),
       ],
