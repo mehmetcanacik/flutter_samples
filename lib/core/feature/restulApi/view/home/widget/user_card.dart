@@ -8,13 +8,12 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
-      elevation: 5.0,
-      shadowColor: Colors.black87,
+    return Container(
+      decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.black54))),
       child: ListTile(
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+            const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
         title: Text(user.fName ?? ""),
         subtitle: Text(user.userMail ?? ""),
         leading: CircleAvatar(
