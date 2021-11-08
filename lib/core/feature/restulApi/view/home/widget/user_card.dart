@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/init/cache_manager/cache_manager.dart';
-
 import '../model/home_model.dart';
 
 class UserCard extends StatefulWidget {

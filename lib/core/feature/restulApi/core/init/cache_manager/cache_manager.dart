@@ -1,9 +1,7 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_samples/core/feature/restulApi/core/base/i_base_model.dart';
-import 'package:flutter_samples/core/feature/restulApi/view/home/model/home_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../view/home/model/home_model.dart';
+import '../../base/i_base_model.dart';
 
 class CacheManager {
   static final CacheManager _singleton = CacheManager._getInternal();
@@ -11,8 +9,10 @@ class CacheManager {
   factory CacheManager() => _singleton;
 
   late final SharedPreferences _preferences;
-  Future preferencesInit() async =>
-      _preferences = await SharedPreferences.getInstance();
+  Future preferencesInit() async {
+    _preferences = await SharedPreferences.getInstance();
+    // _preferences.clear();
+  }
 
   Future<bool> addItemToCache<T extends IBaseModel>(
       {String? eId, T? model}) async {
@@ -47,9 +47,15 @@ class CacheManager {
   }
 
   String _key<T>(String eId) => '$T-$eId';
+  void removeAllItem<T extends IBaseModel>(IBaseModel model) {
+    var response = _preferences
+        .getKeys()
+        .where((element) => element.contains(_key<T>('$T-')))
+        .toList();
+    response.map((e) => _preferences.remove(json.decode(e)) as T);
+  }
 
   bool isCachedData<T extends IBaseModel>(String eId) {
     return _preferences.getString(_key<T>(eId)) != null ? true : false;
   }
-  
 }

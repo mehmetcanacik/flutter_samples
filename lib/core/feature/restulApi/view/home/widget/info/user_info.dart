@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_samples/core/feature/restulApi/core/extensions/context_extensions.dart';
-import 'package:flutter_samples/core/feature/restulApi/core/init/cache_manager/cache_manager.dart';
+import '../../../../core/extensions/context_extensions.dart';
+import '../../../../core/init/cache_manager/cache_manager.dart';
 import 'package:flutter_samples/core/feature/restulApi/view/home/model/home_model.dart';
 
 class UserInfoView extends StatefulWidget {

@@ -1,15 +1,14 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_samples/core/feature/restulApi/view/home/widget/info/user_info.dart';
 import 'package:provider/provider.dart';
 import '../../core/base/base_widget.dart';
 import '../../core/service/i_service.dart';
 import 'home_view_model.dart';
+import 'model/home_model.dart';
+import 'widget/info/user_info.dart';
 import 'widget/loading_widget.dart';
-import 'widget/user_card.dart';
+
 part 'main_page.dart';
 
 class HomeViewProvider extends StatelessWidget {
@@ -40,45 +39,75 @@ class _HomeViewState extends DraftPage<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: viewModel.fetchUsers,
-      ),
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-              onPressed: () async {
-                var response = await Navigator.push<bool>(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const UserInfoView(),
-                  ),
-                );
-                if (response != null) {
-                  debugPrint("Gelen cevap: $response");
-                }
-              },
-              icon: const Icon(Icons.cached))
+      floatingActionButton: fetcUserWidget(),
+      appBar: topBarWidget(context),
+      body: buildBody(context),
+    );
+  }
+
+  Widget buildBody(BuildContext context) {
+    return SizedBox(
+      height: pageHeight,
+      width: pageWidth,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: viewModel.isLoading
+                  ? LoadingWidget(
+                      context: context, color: Colors.red, width: 3.0)
+                  : userBuilder,
+            ),
+          ),
         ],
       ),
-      body: SizedBox(
-        height: pageHeight,
-        width: pageWidth,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                // primary: true,
-                child: viewModel.isLoading
-                    ? LoadingWidget(
-                        context: context, color: Colors.red, width: 3.0)
-                    : userBuilder,
-              ),
-            ),
-          ],
-        ),
+    );
+  }
+
+  PreferredSizeWidget? topBarWidget(BuildContext context) {
+    return AppBar(
+      actions: <Widget>[
+        IconButton(
+            onPressed: () async {
+              await Navigator.push<bool>(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => const UserInfoView(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.cached))
+      ],
+    );
+  }
+
+  FloatingActionButton fetcUserWidget() {
+    return FloatingActionButton(
+        onPressed: viewModel.fetchUsers,
+        child: const Icon(Icons.access_time_filled_sharp));
+  }
+
+  Widget _buildRow(User user) {
+    final _isAlreadySaved = viewModel.savedUsers.contains(user.userMail);
+    return ListTile(
+      title: Text(user.fName ?? ""),
+      leading: CircleAvatar(
+        radius: 30.0,
+        backgroundImage: NetworkImage(user.avatarUrl ?? ""),
       ),
+      subtitle: Text(user.userMail ?? ""),
+      trailing: Icon(_isAlreadySaved ? Icons.favorite : Icons.favorite_border,
+          color: _isAlreadySaved ? Colors.red : null),
+      onTap: () async {
+        if (_isAlreadySaved) {
+          await viewModel.removeItem(user);
+        } else {
+          await viewModel.addCache(user);
+        }
+        // setState(() {});
+      },
     );
   }
 
@@ -88,21 +117,8 @@ class _HomeViewState extends DraftPage<HomeView> {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         var user = viewModel.users[index];
-        return ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-          title: Text(user.fName ?? ""),
-          subtitle: Text(user.userMail ?? ""),
-          leading: CircleAvatar(
-            radius: 30.0,
-            backgroundImage: NetworkImage(user.avatarUrl ?? ""),
-          ),
-          trailing: IconButton(
-              icon: const Icon(Icons.bookmark_add, color: Colors.grey),
-              onPressed: () async {
-                await viewModel.addCache(user);
-              }),
-        );
+        // log("List View içiçnde User : ${user.userMail}");
+        return _buildRow(user);
       },
       itemCount: viewModel.users.length);
 }

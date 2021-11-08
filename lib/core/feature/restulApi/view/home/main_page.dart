@@ -12,7 +12,6 @@ Widget mainPage() {
           ),
           child: Consumer<HomeViewModel>(
             builder: (context, HomeViewModel viewModel, _) {
-              viewModel.setInit();
               return HomeView(
                 viewModel: viewModel,
               );
